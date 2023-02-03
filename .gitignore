@@ -135,3 +135,4 @@ dmypy.json
 /.idea/inspectionProfiles/profiles_settings.xml
 /.idea/vcs.xml
 /z_password_manager.py
+/core/database/password_manager.db
