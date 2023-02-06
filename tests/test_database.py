@@ -94,4 +94,3 @@ class TestPasswordManagerDB(TestCase):
         rows = self.db.search_entry('jim', "0")
         self.assertEqual(5, len(rows), "Number of rows do not match.")
         self.assertNotEqual(rows[1], rows[2], "Row 1 and Row 2 has the same data.")
-
