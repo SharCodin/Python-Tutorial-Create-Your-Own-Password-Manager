@@ -5,13 +5,13 @@ This module provides the implementation of rendering the CLI user interface on s
 get command line arguments from the user. If no arguments was passed, a CLI interface will be displayed to the user.
 
 Components:
-    UserInterface class: create and display the user interface to the user.
+    MainUserInterface class: create and display the user interface to the user.
 """
 
 from utils.utilities import clear_screen
 
 
-class UserInterface:
+class MainUserInterface:
     """Create and display the user interface with options to the user."""
 
     def __init__(self):
