@@ -72,19 +72,26 @@ class TestPasswordManagerDB(TestCase):
         self.assertEqual(expected_row, row, "Row does not match.")
 
     def test_get_all_entries(self):
-        for _ in range(5):
-            initial_data = ("Google", "Jimmy", "Qwerty123")
-            self.db.add_entry(initial_data)
-        rows = []
-        for row in self.db.get_all_entries():
-            rows.append(row)
-        self.assertEqual(5, len(rows), "Number of rows do not match.")
-
-    def test_search_entry(self):
         for idx in range(5):
-            initial_data = ("Google{}".format(idx), "Jimmy{}".format(idx), "Qwerty{}".format(idx))
+            initial_data = (f"Google{idx}", f"Jimmy{idx}", f"Qwerty{idx}")
             self.db.add_entry(initial_data)
-        rows = []
-        for row in self.db.search_entry('e2'):
-            rows.append(row)
+        rows = self.db.get_all_entries("2")
+        self.assertEqual(3, len(rows), "Number of rows do not match.")
+        self.assertNotEqual(rows[1], rows[2], "Row 1 and Row 2 has the same data.")
+
+    def test_search_entry_single_result(self):
+        for idx in range(5):
+            initial_data = (f"Google{idx}", f"Jimmy{idx}", f"Qwerty{idx}")
+            self.db.add_entry(initial_data)
+        rows = self.db.search_entry('jim', "4")
         self.assertEqual(1, len(rows), "Number of rows do not match.")
+        self.assertEqual("Jimmy4", rows[0][2], "Number of rows do not match.")
+
+    def test_search_entry_multiple_results(self):
+        for idx in range(5):
+            initial_data = (f"Google{idx}", f"Jimmy{idx}", f"Qwerty{idx}")
+            self.db.add_entry(initial_data)
+        rows = self.db.search_entry('jim', "0")
+        self.assertEqual(5, len(rows), "Number of rows do not match.")
+        self.assertNotEqual(rows[1], rows[2], "Row 1 and Row 2 has the same data.")
+
