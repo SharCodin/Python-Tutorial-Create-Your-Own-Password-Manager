@@ -16,6 +16,7 @@ Components:
 """
 import os
 import sqlite3
+from typing import Any
 
 
 class PasswordManagerDB:
@@ -108,7 +109,7 @@ class PasswordManagerDB:
         con.close()
         return res
 
-    def get_all_entries(self) -> tuple[int, str, str, str]:
+    def get_all_entries(self) -> Any:
         """
         Retrieve all entries from the database.
 
@@ -127,7 +128,7 @@ class PasswordManagerDB:
             for row in chunk:
                 yield row
 
-    def search_entry(self, search_term: str) -> tuple[int, str, str, str]:
+    def search_entry(self, search_term: str) -> Any:
         """
             Search the database by service, username_email or password. Can do fuzzy search to some extent.
 
