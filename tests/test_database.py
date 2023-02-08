@@ -1,3 +1,22 @@
+"""
+This module contains the tests for the PasswordManagerDB class of the core module.
+
+The tests are built using the unittest library, and they check the following functionalities of the PasswordManagerDB
+class:
+
+    - create_table_if_required()
+    - add_entry()
+    - update_entry_all()
+    - delete_entry()
+    - get_entry()
+    - get_all_entries()
+    - search_entry_single_result()
+    - search_entry_multiple_results()
+
+Before each test, a temporary database is created and after each test it is deleted. The tests verify the correctness
+of the database operations by checking the database content and comparing it to the expected results.
+"""
+
 import os
 import sqlite3
 from unittest import TestCase
@@ -14,7 +33,7 @@ class TestPasswordManagerDB(TestCase):
         self.db = PasswordManagerDB(self.test_db_name)
         self.db.create_table_if_required()
 
-    def tearDown(self) -> None:
+    def tearDown(self):
         os.remove(self.abs_path_to_db)
 
     def test_create_table_if_required(self):
@@ -94,4 +113,3 @@ class TestPasswordManagerDB(TestCase):
         rows = self.db.search_entry('jim', "0")
         self.assertEqual(5, len(rows), "Number of rows do not match.")
         self.assertNotEqual(rows[1], rows[2], "Row 1 and Row 2 has the same data.")
-
