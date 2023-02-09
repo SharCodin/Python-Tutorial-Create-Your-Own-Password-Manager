@@ -16,6 +16,7 @@ Components:
 """
 import os
 import sqlite3
+from typing import Any
 
 
 class PasswordManagerDB:
@@ -108,30 +109,32 @@ class PasswordManagerDB:
         con.close()
         return res
 
-    def get_all_entries(self) -> tuple[int, str, str, str]:
+
+    def get_all_entries(self, offset: str) -> Any:
         """
         Retrieve all entries from the database.
 
+        Args:
+            offset (str): The last row number which was retrieve. If you want to fetch row 10 to row 20 including row
+                          number 10, offset = 9 (start at 10).
         Returns:
             Yields tuple[int, str, str, str]
                 Examples - (2, 'ser', '152', '212')
         """
         con = sqlite3.connect(self.db_file)
         cur = con.cursor()
-        cur.execute("SELECT * FROM services_password")
-        while True:
-            chunk = cur.fetchmany(10)
-            if not chunk:
-                con.close()
-                break
-            for row in chunk:
-                yield row
 
-    def search_entry(self, search_term: str) -> tuple[int, str, str, str]:
+        rows = cur.execute("SELECT * FROM services_password LIMIT 10 OFFSET ?", offset).fetchall()
+        con.close()
+        return rows
+
+    def search_entry(self, search_term: str, offset: str) -> Any:
         """
             Search the database by service, username_email or password. Can do fuzzy search to some extent.
 
         Args:
+            offset (str): The last row number which was retrieve. If you want to fetch row 10 to row 20 including row
+                          number 10, offset = 9 (start at 10).
             search_term (str): The full term or partial term to search for.
 
         Returns:
@@ -139,13 +142,10 @@ class PasswordManagerDB:
         """
         con = sqlite3.connect(self.db_file)
         cur = con.cursor()
-        query = "SELECT * FROM services_password WHERE service LIKE ? OR username_email LIKE ? OR password LIKE ?"
-        search_query = (f"%{search_term}%", f"%{search_term}%", f"%{search_term}%")
+        query = """SELECT * FROM services_password WHERE service LIKE ? OR username_email LIKE ? OR password LIKE ? 
+                LIMIT 10 OFFSET ?"""
+        search_query = (f"%{search_term}%", f"%{search_term}%", f"%{search_term}%", offset)
         cur.execute(query, search_query)
-        while True:
-            chunk = cur.fetchmany(10)
-            if not chunk:
-                con.close()
-                break
-            for row in chunk:
-                yield row
+        rows = cur.execute("SELECT * FROM services_password LIMIT 10 OFFSET ?", offset).fetchall()
+        con.close()
+        return rows
