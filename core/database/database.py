@@ -109,6 +109,7 @@ class PasswordManagerDB:
         con.close()
         return res
 
+
     def get_all_entries(self, offset: str) -> Any:
         """
         Retrieve all entries from the database.
@@ -116,13 +117,13 @@ class PasswordManagerDB:
         Args:
             offset (str): The last row number which was retrieve. If you want to fetch row 10 to row 20 including row
                           number 10, offset = 9 (start at 10).
-
         Returns:
             Yields tuple[int, str, str, str]
                 Examples - (2, 'ser', '152', '212')
         """
         con = sqlite3.connect(self.db_file)
         cur = con.cursor()
+
         rows = cur.execute("SELECT * FROM services_password LIMIT 10 OFFSET ?", offset).fetchall()
         con.close()
         return rows
